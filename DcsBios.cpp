@@ -156,6 +156,32 @@ void Potentiometer::pollInput() {
 	lastState_ = state;
 }
 
+SwitchMultiPosPot::SwitchMultiPosPot(char* msg, char pin, const unsigned int* levels, char numberOfLevels) {
+	msg_ = msg;
+	pin_ = pin;
+	pinMode(pin_, INPUT);
+	levels_ = levels;
+	numberOfLevels_ = numberOfLevels;
+	lastState_ = readState();
+}
+char SwitchMultiPosPot::readState() {
+	int val = analogRead(pin_);
+	for(int i = 0; i < numberOfLevels_; i++) {
+		if(val > levels_[i]) {
+			return i;
+		}
+	}
+	return numberOfLevels_;
+}
+void SwitchMultiPosPot::pollInput() {
+	char state = readState();
+	if (state != lastState_) {
+		char buf[7];
+		utoa(state, buf, 10);
+		sendDcsBiosMessage(msg_, buf);
+	}
+	lastState_ = state;
+}
 
 SwitchMultiPos::SwitchMultiPos(char* msg, const byte* pins, char numberOfPins) {
 	msg_ = msg;

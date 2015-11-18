@@ -127,6 +127,19 @@ class SwitchMultiPos : PollingInput {
 		SwitchMultiPos(char* msg_, const byte* pins, char numberOfPins);
 };
 
+class SwitchMultiPosPot : PollingInput {
+	private:
+		void pollInput();
+		char* msg_;
+		char pin_;
+		const unsigned int* levels_;
+		char numberOfLevels_;
+		char lastState_;
+		char readState();
+	public:
+		SwitchMultiPosPot(char* msg_, char pin, const unsigned int* levels, char numberOfLevels);
+};
+
 class Potentiometer : PollingInput {
 	private:
 		void pollInput();
